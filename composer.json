@@ -1,6 +1,13 @@
 {
     "name": "egough/laravel-settings",
     "description": "Database-backed settings and features for Laravel.",
+    "keywords": [
+        "laravel",
+        "settings",
+        "feature-flags",
+        "configuration"
+    ],
+    "homepage": "https://github.com/realedwardgough/laravel-settings",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -31,6 +38,5 @@
                 "Flag": "Egough\\LaravelSettings\\Facades\\Flag"
             }
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
