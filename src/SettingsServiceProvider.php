@@ -6,6 +6,9 @@ namespace Egough\LaravelSettings;
 
 use Egough\LaravelSettings\Contracts\SettingsRepository;
 use Egough\LaravelSettings\Repositories\DatabaseSettingsRepository;
+use Egough\LaravelSettings\Console\GetSettingCommand;
+use Egough\LaravelSettings\Console\SetSettingCommand;
+use Egough\LaravelSettings\Console\ClearSettingsCacheCommand;
 use Illuminate\Support\ServiceProvider;
 
 class SettingsServiceProvider extends ServiceProvider
@@ -42,7 +45,11 @@ class SettingsServiceProvider extends ServiceProvider
         ], groups: 'settings-migrations');
 
         if ($this->app->runningInConsole()) {
-            // coming soon... commands
+            $this->commands([
+                GetSettingCommand::class,
+                SetSettingCommand::class,
+                ClearSettingsCacheCommand::class,
+            ]);
         }
     }
 }
