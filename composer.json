@@ -1,0 +1,31 @@
+{
+    "name": "egough/laravel-settings",
+    "description": "Database-backed settings and features for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Egough\\LaravelSettings\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Edward Gough"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Egough\\LaravelSettings\\SettingsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
