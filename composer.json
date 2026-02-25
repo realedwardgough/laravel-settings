@@ -25,7 +25,11 @@
         "laravel": {
             "providers": [
                 "Egough\\LaravelSettings\\SettingsServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Settings": "Egough\\LaravelSettings\\Facades\\Settings",
+                "Flag": "Egough\\LaravelSettings\\Facades\\Flag"
+            }
         }
     },
     "minimum-stability": "dev"

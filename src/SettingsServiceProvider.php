@@ -28,6 +28,12 @@ class SettingsServiceProvider extends ServiceProvider
                 cache: $app['cache.store']
             );
         });
+
+        $this->app->singleton(abstract: 'settings.flags', concrete: function ($app) {
+            return new \Egough\LaravelSettings\Support\FlagManager(
+                $app->make(\Egough\LaravelSettings\SettingsManager::class)
+            );
+        });
     }
 
     /**
@@ -51,5 +57,7 @@ class SettingsServiceProvider extends ServiceProvider
                 ClearSettingsCacheCommand::class,
             ]);
         }
+
+        $this->app->alias(abstract: \Egough\LaravelSettings\SettingsManager::class, alias: 'settings.manager');
     }
 }

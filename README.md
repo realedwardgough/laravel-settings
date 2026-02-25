@@ -2,11 +2,27 @@
 
 Database-backed application settings and feature flags for Laravel.
 
-`egough/laravel-settings` provides a simple, typed, cacheable way to store dynamic application configuration outside of `.env` and static config files.
+`egough/laravel-settings` provides a simple, typed, and cacheable way to store dynamic application configuration outside of `.env` files and static config values.
+
 
 ---
 
-## Installation
+## ✨ Features
+
+* ✅ Database-backed settings
+* ✅ Typed values (`string`, `int`, `float`, `bool`, `json`)
+* ✅ Automatic caching
+* ✅ Config default fallback
+* ✅ Helper functions
+* ✅ Facade support
+* ✅ Feature flags
+* ✅ Artisan commands
+* ✅ Laravel auto-discovery
+* ✅ Publishable config & migrations
+
+---
+
+## 📦 Installation
 
 Install via Composer:
 
@@ -16,20 +32,7 @@ composer require egough/laravel-settings
 
 ---
 
-## Features
-
-- Database-backed settings
-- Typed values (string, int, float, bool, json)
-- Automatic caching
-- Config default fallback
-- Feature flag helpers
-- Artisan commands
-- Laravel auto-discovery
-- Publishable config & migrations
-
----
-
-## Publish Configuration
+## ⚙️ Publish Configuration
 
 Publish the configuration file:
 
@@ -51,7 +54,17 @@ php artisan migrate
 
 ---
 
-## Basic Usage
+## 🚀 Usage
+
+The package provides **three ways** to interact with settings:
+
+* Helper functions
+* Facades
+* Dependency Injection
+
+---
+
+## Helper Usage
 
 ### Setting Values
 
@@ -85,21 +98,69 @@ settings()->all();
 
 ---
 
-## Feature Flags
+## Facade Usage
 
-Feature flags are simple boolean settings.
+Facades are automatically registered via Laravel package discovery.
+
+```php
+use Settings;
+
+Settings::set('site.name', 'My Application');
+
+Settings::get('site.name');
+
+Settings::all();
+```
+
+Feature flags via facade:
+
+```php
+use Flag;
+
+Flag::enabled('billing.enabled');
+```
+
+---
+
+## Dependency Injection
+
+You may inject the manager directly:
+
+```php
+use Egough\LaravelSettings\SettingsManager;
+
+public function __construct(
+    private SettingsManager $settings
+) {}
+
+$this->settings->get('site.name');
+```
+
+---
+
+## 🚩 Feature Flags
+
+Feature flags are boolean-backed settings.
+
+### Helper
 
 ```php
 flag('billing.enabled');
 ```
 
+### Facade
+
+```php
+Flag::enabled('new.dashboard');
+```
+
 With fallback:
 
 ```php
-flag('new.dashboard', false);
+flag('beta.feature', false);
 ```
 
-Example usage:
+Example:
 
 ```php
 if (flag('beta.feature')) {
@@ -109,7 +170,7 @@ if (flag('beta.feature')) {
 
 ---
 
-## Default Values
+## 🧠 Default Values
 
 Define default settings inside:
 
@@ -132,11 +193,11 @@ Lookup priority:
 
 ---
 
-## Caching
+## ⚡ Caching
 
 All settings are cached automatically for performance.
 
-Cache behaviour can be configured:
+Configure caching:
 
 ```php
 'cache' => [
@@ -154,7 +215,7 @@ php artisan settings:clear-cache
 
 ---
 
-## Artisan Commands
+## 🛠 Artisan Commands
 
 ### Get a Setting
 
@@ -188,14 +249,14 @@ php artisan settings:clear-cache
 
 ---
 
-## Requirements
+## 🧪 Requirements
 
 * PHP 8.2+
 * Laravel 11+
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome.
 
@@ -203,14 +264,12 @@ Please open a Pull Request or Issue on GitHub.
 
 ---
 
-## License
+## 📄 License
 
 The MIT License (MIT).
 
 ---
 
-## Author
+## 👤 Author
 
 **Edward Gough**
-
----
