@@ -1,5 +1,9 @@
 # egough/laravel-settings
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
+[![Total Downloads](https://img.shields.io/packagist/dt/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
+[![License](https://img.shields.io/packagist/l/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
+
 Database-backed application settings and feature flags for Laravel.
 
 `egough/laravel-settings` provides a simple, typed, and cacheable way to store dynamic application configuration outside of `.env` files and static config values.
@@ -27,7 +31,7 @@ Database-backed application settings and feature flags for Laravel.
 Install via Composer:
 
 ```bash
-composer require egough/laravel-settings
+composer require egough/laravel-settings:^1.0
 ```
 
 ---
