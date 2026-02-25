@@ -1,9 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Egough\LaravelSettings\Support;
 
 final class Caster
 {
+    /**
+     * @param mixed $value
+     * @return string
+     */
     public static function detectType(mixed $value): string
     {
         return match (true) {
@@ -16,6 +22,12 @@ final class Caster
         };
     }
 
+    /**
+     * @param string $type
+     * @param mixed $value
+     * @return string|null
+     * @throws \JsonException
+     */
     public static function encode(string $type, mixed $value): ?string
     {
         if ($value === null) return null;
@@ -27,6 +39,12 @@ final class Caster
         };
     }
 
+    /**
+     * @param string $type
+     * @param string|null $value
+     * @return mixed
+     * @throws \JsonException
+     */
     public static function decode(string $type, ?string $value): mixed
     {
         if ($value === null) return null;
