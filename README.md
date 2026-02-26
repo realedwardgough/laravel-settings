@@ -174,6 +174,97 @@ if (flag('beta.feature')) {
 
 ---
 
+## 🧩 Blade Directives
+
+`egough/laravel-settings` provides convenient Blade directives for working with settings and feature flags directly within your views.
+
+---
+
+### `@hasSetting`
+
+Render content only if a setting exists.
+
+```blade
+@hasSetting('site.name')
+    <h1>{{ settings()->get('site.name') }}</h1>
+@endhasSetting
+```
+
+You may also use an `@else` condition:
+
+```blade
+@hasSetting('site.name')
+    Setting exists
+@else
+    Setting not configured
+@endhasSetting
+```
+
+---
+
+### `@hasFlag`
+
+Conditionally render content based on a feature flag.
+
+```blade
+@hasFlag('billing.enabled')
+    <x-billing-panel />
+@endhasFlag
+```
+
+With fallback value:
+
+```blade
+@hasFlag('beta.dashboard', false)
+    <x-beta-dashboard />
+@endhasFlag
+```
+
+Example:
+
+```blade
+@hasFlag('new-ui')
+    <p>New interface enabled</p>
+@else
+    <p>Classic interface</p>
+@endhasFlag
+```
+
+---
+
+### `@setting`
+
+Echo a setting value directly within Blade.
+
+```blade
+<title>@setting('site.name')</title>
+```
+
+Equivalent to:
+
+```blade
+{{ settings()->get('site.name') }}
+```
+
+---
+
+### Example Usage
+
+```blade
+@hasFlag('maintenance.mode')
+    <x-maintenance-banner />
+@endhasFlag
+
+<footer>
+    © @setting('site.name')
+</footer>
+```
+
+---
+
+
+---
+
 ## 🧠 Default Values
 
 Define default settings inside:
