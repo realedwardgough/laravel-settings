@@ -1,6 +1,6 @@
 {
     "name": "egough/laravel-settings",
-    "description": "Database-backed settings and features for Laravel.",
+    "description": "Database-backed settings and features for Laravel. egough/laravel-settings provides a simple, typed, and cacheable way to store dynamic application configuration outside of .env files and static config values.",
     "keywords": [
         "laravel",
         "settings",
