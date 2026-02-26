@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Egough\LaravelSettings\Console;
 
-use Illuminate\Console\Command;
 use Egough\LaravelSettings\SettingsManager;
+use Illuminate\Console\Command;
 use JsonException;
 
 class SetSettingCommand extends Command
@@ -20,8 +20,6 @@ class SetSettingCommand extends Command
     protected $description = 'Store or update a setting';
 
     /**
-     * @param SettingsManager $settings
-     * @return int
      * @throws JsonException
      */
     public function handle(SettingsManager $settings): int
@@ -40,9 +38,6 @@ class SetSettingCommand extends Command
     }
 
     /**
-     * @param string $value
-     * @param string|null $type
-     * @return mixed
      * @throws JsonException
      */
     private function castInput(string $value, ?string $type): mixed

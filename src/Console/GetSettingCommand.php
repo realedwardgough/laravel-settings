@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Egough\LaravelSettings\Console;
 
-use Illuminate\Console\Command;
 use Egough\LaravelSettings\SettingsManager;
+use Illuminate\Console\Command;
 
 class GetSettingCommand extends Command
 {
     protected $signature = 'settings:get {key}';
+
     protected $description = 'Retrieve a setting value';
 
     public function handle(SettingsManager $settings): int
@@ -20,6 +21,7 @@ class GetSettingCommand extends Command
 
         if ($value === null) {
             $this->warn("Setting [$key] not found.");
+
             return self::FAILURE;
         }
 

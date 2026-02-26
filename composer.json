@@ -38,5 +38,9 @@
                 "Flag": "Egough\\LaravelSettings\\Facades\\Flag"
             }
         }
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "laravel/pint": "dev-main"
     }
 }

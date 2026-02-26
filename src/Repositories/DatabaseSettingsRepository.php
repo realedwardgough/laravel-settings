@@ -29,10 +29,6 @@ class DatabaseSettingsRepository implements SettingsRepository
     }
 
     /**
-     * @param string $key
-     * @param mixed $value
-     * @param string|null $type
-     * @return void
      * @throws \JsonException
      */
     public function set(string $key, mixed $value, ?string $type = null): void
@@ -45,10 +41,6 @@ class DatabaseSettingsRepository implements SettingsRepository
         );
     }
 
-    /**
-     * @param string $key
-     * @return void
-     */
     public function forget(string $key): void
     {
         Setting::query()->where('key', $key)->delete();
