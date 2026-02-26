@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property-read string getTable
  *
  * @mixin Model

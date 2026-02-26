@@ -2,18 +2,15 @@
 
 namespace Egough\LaravelSettings\Console;
 
-use Illuminate\Console\Command;
 use Egough\LaravelSettings\SettingsManager;
+use Illuminate\Console\Command;
 
 class ClearSettingsCacheCommand extends Command
 {
     protected $signature = 'settings:clear-cache';
+
     protected $description = 'Clear cached settings';
 
-    /**
-     * @param SettingsManager $settings
-     * @return int
-     */
     public function handle(SettingsManager $settings): int
     {
         $settings->clearCache();
