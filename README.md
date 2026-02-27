@@ -4,131 +4,127 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
 [![License](https://img.shields.io/packagist/l/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
 
-Database-backed application settings and feature flags for Laravel.
+Database-backed application and model settings for Laravel.
 
-`egough/laravel-settings` provides a simple, typed, and cacheable way to store dynamic application configuration outside of `.env` files and static config values.
+Provides a simple, typed and cacheable way to store dynamic configuration outside of `.env` and static config files, including per-model settings such as user or team preferences.
+
+---
+
+
+## Quick Example
+
+```php
+// Application setting
+settings()->set('site.name', 'My Application');
+
+settings()->get('site.name');
+
+
+// Model-specific setting
+$user->settings()->set('ui.theme', 'dark');
+
+$user->settings()->get('ui.theme');
+
+
+// Feature flag
+if (flag('billing.enabled')) {
+    // Feature enabled
+}
+```
+
+Blade usage:
+
+```blade
+@hasFlag('billing.enabled')
+    <x-billing-panel />
+@endhasFlag
+
+<title>@setting('site.name')</title>
+```
+
+---
+
+## When Should I Use This Package?
+
+Use this package when your application needs configuration that can change at runtime without modifying environment variables or deployment configuration.
+
+Typical use cases include:
+
+**Application settings**
+
+* Site name or branding
+* Feature toggles
+* Maintenance or runtime configuration
+* Admin-managed options
+
+**Model settings**
+
+* User preferences (theme, notifications, dashboard layout)
+* Team or organisation configuration
+* Account-specific options
+* Per-project or per-resource metadata
+
+This package is intended for dynamic configuration stored in the database and accessed consistently across your application.
+
+---
+
+### When Not to Use It
+
+You should continue using Laravel configuration or environment variables for:
+
+* Database credentials
+* API keys and secrets
+* Environment-specific infrastructure configuration
+* Values required during application boot
+
+In general:
+
+* `.env` → infrastructure and secrets
+* `config/*.php` → static application configuration
+* `egough/laravel-settings` → runtime, database-driven configuration
 
 
 ---
 
-## ✨ Features
-
-* ✅ Database-backed settings
-* ✅ Typed values (`string`, `int`, `float`, `bool`, `json`)
-* ✅ Automatic caching
-* ✅ Config default fallback
-* ✅ Helper functions
-* ✅ Facade support
-* ✅ Feature flags
-* ✅ Artisan commands
-* ✅ Laravel auto-discovery
-* ✅ Publishable config & migrations
-
----
-
-## 📦 Installation
-
-Install via Composer:
+## Installation
 
 ```bash
 composer require egough/laravel-settings:^1.0
 ```
 
----
-
-## ⚙️ Publish Configuration
-
-Publish the configuration file:
+Publish configuration and migrations:
 
 ```bash
 php artisan vendor:publish --tag=settings-config
-```
-
-Publish the migration:
-
-```bash
 php artisan vendor:publish --tag=settings-migrations
-```
-
-Run migrations:
-
-```bash
+php artisan vendor:publish --tag=settings-model-migrations
 php artisan migrate
 ```
 
 ---
 
-## 🚀 Usage
+## Application Settings
 
-The package provides **three ways** to interact with settings:
+Global settings are accessible anywhere in your application.
 
-* Helper functions
-* Facades
-* Dependency Injection
-
----
-
-## Helper Usage
-
-### Setting Values
+### Helper
 
 ```php
 settings()->set('site.name', 'My Application');
 
-settings()->set('billing.enabled', true);
-
-settings()->set('ui.options', [
-    'dark_mode' => true,
-]);
-```
-
----
-
-### Retrieving Values
-
-```php
 settings()->get('site.name');
-
-settings()->get('unknown.key', 'fallback');
 ```
 
----
-
-### Retrieve All Settings
-
-```php
-settings()->all();
-```
-
----
-
-## Facade Usage
-
-Facades are automatically registered via Laravel package discovery.
+### Facade
 
 ```php
 use Settings;
 
 Settings::set('site.name', 'My Application');
-
 Settings::get('site.name');
-
-Settings::all();
 ```
 
-Feature flags via facade:
-
-```php
-use Flag;
-
-Flag::enabled('billing.enabled');
-```
-
----
-
-## Dependency Injection
-
-You may inject the manager directly:
+### Dependency Injection
 
 ```php
 use Egough\LaravelSettings\SettingsManager;
@@ -142,20 +138,53 @@ $this->settings->get('site.name');
 
 ---
 
-## 🚩 Feature Flags
+## Model Settings
 
-Feature flags are boolean-backed settings.
+Settings can be attached to any Eloquent model.
 
-### Helper
+Add the trait:
+
+```php
+use Egough\LaravelSettings\Traits\HasSettings;
+
+class User extends Model
+{
+    use HasSettings;
+}
+```
+
+Usage:
+
+```php
+$user = User::find(1);
+
+$user->settings()->set('ui.theme', 'dark');
+
+$user->settings()->get('ui.theme');
+```
+
+Retrieve all settings:
+
+```php
+$user->settings()->all();
+```
+
+Remove a setting:
+
+```php
+$user->settings()->forget('ui.theme');
+```
+
+---
+
+## Feature Flags
+
+Feature flags are boolean settings.
 
 ```php
 flag('billing.enabled');
-```
 
-### Facade
-
-```php
-Flag::enabled('new.dashboard');
+Flag::enabled('billing.enabled');
 ```
 
 With fallback:
@@ -164,123 +193,33 @@ With fallback:
 flag('beta.feature', false);
 ```
 
-Example:
-
-```php
-if (flag('beta.feature')) {
-    // Enable beta functionality
-}
-```
-
 ---
 
-## 🧩 Blade Directives
-
-`egough/laravel-settings` provides convenient Blade directives for working with settings and feature flags directly within your views.
-
----
-
-### `@hasSetting`
-
-Render content only if a setting exists.
+## Blade Directives
 
 ```blade
 @hasSetting('site.name')
-    <h1>{{ settings()->get('site.name') }}</h1>
 @endhasSetting
-```
 
-You may also use an `@else` condition:
-
-```blade
-@hasSetting('site.name')
-    Setting exists
-@else
-    Setting not configured
-@endhasSetting
-```
-
----
-
-### `@hasFlag`
-
-Conditionally render content based on a feature flag.
-
-```blade
 @hasFlag('billing.enabled')
-    <x-billing-panel />
 @endhasFlag
-```
 
-With fallback value:
-
-```blade
-@hasFlag('beta.dashboard', false)
-    <x-beta-dashboard />
-@endhasFlag
-```
-
-Example:
-
-```blade
-@hasFlag('new-ui')
-    <p>New interface enabled</p>
-@else
-    <p>Classic interface</p>
-@endhasFlag
-```
-
----
-
-### `@setting`
-
-Echo a setting value directly within Blade.
-
-```blade
 <title>@setting('site.name')</title>
 ```
 
-Equivalent to:
-
-```blade
-{{ settings()->get('site.name') }}
-```
-
 ---
 
-### Example Usage
+## Default Values
 
-```blade
-@hasFlag('maintenance.mode')
-    <x-maintenance-banner />
-@endhasFlag
-
-<footer>
-    © @setting('site.name')
-</footer>
-```
-
----
-
-
----
-
-## 🧠 Default Values
-
-Define default settings inside:
-
-```
-config/settings.php
-```
+Define defaults in `config/settings.php`:
 
 ```php
 'defaults' => [
     'site.name' => 'Laravel App',
-    'billing.enabled' => false,
-],
+];
 ```
 
-Lookup priority:
+Lookup order:
 
 1. Database value
 2. Config default
@@ -288,19 +227,9 @@ Lookup priority:
 
 ---
 
-## ⚡ Caching
+## Caching
 
-All settings are cached automatically for performance.
-
-Configure caching:
-
-```php
-'cache' => [
-    'enabled' => true,
-    'key' => 'egough.settings.all',
-    'ttl' => 3600,
-],
-```
+Settings are cached automatically.
 
 Clear cache manually:
 
@@ -310,61 +239,23 @@ php artisan settings:clear-cache
 
 ---
 
-## 🛠 Artisan Commands
-
-### Get a Setting
+## Artisan Commands
 
 ```bash
 php artisan settings:get site.name
-```
-
----
-
-### Set a Setting
-
-```bash
-php artisan settings:set billing.enabled true --type=bool
-```
-
-Supported types:
-
-* string
-* int
-* float
-* bool
-* json
-
----
-
-### Clear Cached Settings
-
-```bash
+php artisan settings:set site.name "My App"
 php artisan settings:clear-cache
 ```
 
 ---
 
-## 🧪 Requirements
+## Requirements
 
 * PHP 8.2+
 * Laravel 11+
 
 ---
 
-## 🤝 Contributing
+## License
 
-Contributions, issues, and feature requests are welcome.
-
-Please open a Pull Request or Issue on GitHub.
-
----
-
-## 📄 License
-
-The MIT License (MIT).
-
----
-
-## 👤 Author
-
-**Edward Gough**
+MIT
