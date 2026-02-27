@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create(config('settings.model.table', 'model_settings'), function (Blueprint $table) {
+            $table->id();
+            $table->string('settingable_type');
+            $table->unsignedBigInteger('settingable_id');
+            $table->string('key');
+            $table->longText('value')->nullable();
+            $table->string('type')->default('string');
+            $table->timestamps();
+
+            $table->unique(['settingable_type', 'settingable_id', 'key'], 'model_settings_unique');
+            $table->index(['settingable_type', 'settingable_id'], 'model_settings_owner');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists(config('settings.model.table', 'model_settings'));
+    }
+};
