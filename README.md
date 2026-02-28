@@ -1,4 +1,5 @@
-# egough/laravel-settings
+
+![alt text](https://banners.beyondco.de/Laravel%20Settings.png?theme=light&packageManager=composer+require&packageName=egough%2Flaravel-settings&pattern=architect&style=style_2&description=Global+%26+Model+Settings&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg "Laravel Settings")
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
 [![Total Downloads](https://img.shields.io/packagist/dt/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
