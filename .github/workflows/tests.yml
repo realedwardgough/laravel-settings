@@ -42,6 +42,7 @@ jobs:
         run: >
           composer require --no-interaction --no-update
           illuminate/cache:${{ matrix.laravel }}
+          illuminate/config:${{ matrix.laravel }}
           illuminate/console:${{ matrix.laravel }}
           illuminate/database:${{ matrix.laravel }}
           illuminate/support:${{ matrix.laravel }}
