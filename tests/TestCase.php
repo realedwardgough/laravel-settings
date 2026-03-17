@@ -15,7 +15,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $app = new Container();
+        $app = new Container;
 
         $app->instance('config', new ConfigRepository([
             'settings' => [

@@ -16,8 +16,8 @@ class ModelSettingsManagerTest extends TestCase
     public function test_it_requires_a_model_scope_before_access(): void
     {
         $manager = new ModelSettingsManager(
-            new InMemoryModelSettingsRepository(),
-            new CacheRepository(new ArrayStore()),
+            new InMemoryModelSettingsRepository,
+            new CacheRepository(new ArrayStore),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -28,11 +28,11 @@ class ModelSettingsManagerTest extends TestCase
 
     public function test_it_reads_and_updates_settings_for_a_scoped_model(): void
     {
-        $repo = new InMemoryModelSettingsRepository();
-        $model = new FakeModel();
+        $repo = new InMemoryModelSettingsRepository;
+        $model = new FakeModel;
         $model->id = 5;
 
-        $manager = new ModelSettingsManager($repo, new CacheRepository(new ArrayStore()));
+        $manager = new ModelSettingsManager($repo, new CacheRepository(new ArrayStore));
         $scopedManager = $manager->for($model);
 
         $scopedManager->set('ui.theme', 'dark');
@@ -47,13 +47,13 @@ class ModelSettingsManagerTest extends TestCase
 
     public function test_it_caches_model_settings_per_scope_until_the_cache_is_cleared(): void
     {
-        $repo = new InMemoryModelSettingsRepository();
-        $model = new FakeModel();
+        $repo = new InMemoryModelSettingsRepository;
+        $model = new FakeModel;
         $model->id = 12;
 
         $repo->items[FakeModel::class.':12'] = ['dashboard.layout' => 'grid'];
 
-        $manager = (new ModelSettingsManager($repo, new CacheRepository(new ArrayStore())))->for($model);
+        $manager = (new ModelSettingsManager($repo, new CacheRepository(new ArrayStore)))->for($model);
 
         $this->assertSame('grid', $manager->get('dashboard.layout'));
         $this->assertSame(1, $repo->allCalls);

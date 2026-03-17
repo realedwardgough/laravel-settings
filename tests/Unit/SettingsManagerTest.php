@@ -16,12 +16,12 @@ class SettingsManagerTest extends TestCase
     {
         config()->set('settings.defaults', ['site.tagline' => 'Default Tagline']);
 
-        $repo = new InMemorySettingsRepository();
+        $repo = new InMemorySettingsRepository;
         $repo->items = [
             'site.name' => ['type' => 'string', 'value' => 'Stored Name'],
         ];
 
-        $manager = new SettingsManager($repo, new CacheRepository(new ArrayStore()));
+        $manager = new SettingsManager($repo, new CacheRepository(new ArrayStore));
 
         $this->assertSame('Stored Name', $manager->get('site.name', 'Fallback Name'));
         $this->assertSame('Default Tagline', $manager->get('site.tagline', 'Fallback Name'));
@@ -30,12 +30,12 @@ class SettingsManagerTest extends TestCase
 
     public function test_it_uses_cached_values_until_cache_is_cleared(): void
     {
-        $repo = new InMemorySettingsRepository();
+        $repo = new InMemorySettingsRepository;
         $repo->items = [
             'site.name' => ['type' => 'string', 'value' => 'Alpha'],
         ];
 
-        $manager = new SettingsManager($repo, new CacheRepository(new ArrayStore()));
+        $manager = new SettingsManager($repo, new CacheRepository(new ArrayStore));
 
         $this->assertSame('Alpha', $manager->get('site.name'));
         $this->assertSame(1, $repo->allCalls);
@@ -53,8 +53,8 @@ class SettingsManagerTest extends TestCase
 
     public function test_it_updates_and_forgets_values_through_the_repository(): void
     {
-        $repo = new InMemorySettingsRepository();
-        $manager = new SettingsManager($repo, new CacheRepository(new ArrayStore()));
+        $repo = new InMemorySettingsRepository;
+        $manager = new SettingsManager($repo, new CacheRepository(new ArrayStore));
 
         $manager->set('feature.billing', true, 'bool');
         $this->assertTrue($manager->flag('feature.billing'));

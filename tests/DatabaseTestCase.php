@@ -15,7 +15,7 @@ abstract class DatabaseTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->database = new Capsule();
+        $this->database = new Capsule;
         $this->database->addConnection([
             'driver' => 'sqlite',
             'database' => ':memory:',

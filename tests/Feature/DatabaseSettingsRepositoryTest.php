@@ -12,7 +12,7 @@ class DatabaseSettingsRepositoryTest extends DatabaseTestCase
 {
     public function test_it_persists_and_returns_typed_global_settings(): void
     {
-        $repository = new DatabaseSettingsRepository();
+        $repository = new DatabaseSettingsRepository;
 
         $repository->set('feature.enabled', true);
         $repository->set('checkout.retries', 3);
@@ -38,7 +38,7 @@ class DatabaseSettingsRepositoryTest extends DatabaseTestCase
             $table->timestamps();
         });
 
-        $repository = new DatabaseSettingsRepository();
+        $repository = new DatabaseSettingsRepository;
         $repository->set('site.name', 'Package Name');
 
         $this->assertTrue(Setting::query()->where('key', 'site.name')->exists());

@@ -12,7 +12,7 @@ class DatabaseModelSettingsRepositoryTest extends DatabaseTestCase
 {
     public function test_it_persists_and_returns_typed_model_settings(): void
     {
-        $repository = new DatabaseModelSettingsRepository();
+        $repository = new DatabaseModelSettingsRepository;
 
         $repository->set('users', 7, 'notifications.email', false);
         $repository->set('users', 7, 'dashboard.widgets', ['sales', 'tasks']);
@@ -25,7 +25,7 @@ class DatabaseModelSettingsRepositoryTest extends DatabaseTestCase
 
     public function test_it_forgets_only_the_requested_model_setting(): void
     {
-        $repository = new DatabaseModelSettingsRepository();
+        $repository = new DatabaseModelSettingsRepository;
 
         $repository->set('users', 7, 'ui.theme', 'dark');
         $repository->set('users', 7, 'timezone', 'UTC');
@@ -51,7 +51,7 @@ class DatabaseModelSettingsRepositoryTest extends DatabaseTestCase
             $table->timestamps();
         });
 
-        $repository = new DatabaseModelSettingsRepository();
+        $repository = new DatabaseModelSettingsRepository;
         $repository->set('teams', 4, 'branding.primary_colour', 'blue');
 
         $this->assertTrue(ModelSetting::query()->where('key', 'branding.primary_colour')->exists());
