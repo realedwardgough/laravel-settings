@@ -11,8 +11,12 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "illuminate/support": "^11.0|^12.0"
+        "php": "^8.2 || ^8.3 || ^8.4",
+        "illuminate/cache": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "illuminate/console": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "illuminate/database": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "illuminate/support": "^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "illuminate/view": "^10.0 || ^11.0 || ^12.0 || ^13.0"
     },
     "autoload": {
         "psr-4": {
@@ -21,6 +25,11 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Egough\\LaravelSettings\\Tests\\": "tests/"
+        }
     },
     "authors": [
         {
@@ -41,6 +50,10 @@
     },
     "minimum-stability": "dev",
     "require-dev": {
-        "laravel/pint": "dev-main"
+        "laravel/pint": "dev-main",
+        "phpunit/phpunit": "^11.5"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }

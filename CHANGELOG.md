@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.0 - 2026-03-17
+
+### Added
+- Tests
+- Laravel 13 Support
+
 ## v1.1.0 - 2026-02-26
 
 ### Added
