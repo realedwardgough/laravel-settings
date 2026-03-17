@@ -8,12 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModelSetting extends Model
 {
-    /** @var array  */
+    /** @var array */
     protected $guarded = [];
 
-    /**
-     * @return string
-     */
     public function getTable(): string
     {
         return config('settings.model.table', 'model_settings');

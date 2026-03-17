@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Egough\LaravelSettings\Facades;
 
+use Egough\LaravelSettings\SettingsManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void clearCache()
  * @method static bool flag(string $key, bool $default = false)
  *
- * @see \Egough\LaravelSettings\SettingsManager
+ * @see SettingsManager
  */
 class Settings extends Facade
 {

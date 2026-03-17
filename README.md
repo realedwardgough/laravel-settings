@@ -4,6 +4,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
 [![Total Downloads](https://img.shields.io/packagist/dt/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
 [![License](https://img.shields.io/packagist/l/egough/laravel-settings.svg?style=flat-square)](https://packagist.org/packages/egough/laravel-settings)
+[![Tests](https://github.com/realedwardgough/laravel-settings/actions/workflows/tests.yml/badge.svg)](https://github.com/realedwardgough/laravel-settings/actions/workflows/tests.yml)
 
 Database-backed application and model settings for Laravel.
 
@@ -240,6 +241,30 @@ php artisan settings:clear-cache
 
 ---
 
+## Testing
+
+Install development dependencies:
+
+```bash
+composer install
+```
+
+Run the test suite:
+
+```bash
+composer test
+```
+
+Or run PHPUnit directly:
+
+```bash
+vendor/bin/phpunit
+```
+
+The package tests use a lightweight in-memory SQLite setup for repository integration coverage, so no external database service is required.
+
+---
+
 ## Artisan Commands
 
 ```bash
@@ -253,7 +278,7 @@ php artisan settings:clear-cache
 ## Requirements
 
 * PHP 8.2+
-* Laravel 11+
+* Laravel 10, 11, 12, or 13
 
 ---
 

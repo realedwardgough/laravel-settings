@@ -64,14 +64,12 @@ class SettingsServiceProvider extends ServiceProvider
 
         // Publish migrations (global)
         $this->publishes(paths: [
-            __DIR__.'/../database/migrations/create_settings_table.php.stub' =>
-                database_path(path: 'migrations/'.date(format: 'Y_m_d_His').'_create_settings_table.php'),
+            __DIR__.'/../database/migrations/create_settings_table.php.stub' => database_path(path: 'migrations/'.date(format: 'Y_m_d_His').'_create_settings_table.php'),
         ], groups: 'settings-migrations');
 
         // Publish migrations (model-scoped)
         $this->publishes(paths: [
-            __DIR__.'/../database/migrations/create_model_settings_table.php.stub' =>
-                database_path(path: 'migrations/'.date(format: 'Y_m_d_His').'_create_model_settings_table.php'),
+            __DIR__.'/../database/migrations/create_model_settings_table.php.stub' => database_path(path: 'migrations/'.date(format: 'Y_m_d_His').'_create_model_settings_table.php'),
         ], groups: 'settings-model-migrations');
 
         // Commands

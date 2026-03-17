@@ -10,9 +10,6 @@ use Egough\LaravelSettings\Support\Caster;
 class DatabaseModelSettingsRepository implements ModelSettingsRepository
 {
     /**
-     * @param string $type
-     * @param int $id
-     * @return array
      * @throws \JsonException
      */
     public function all(string $type, int $id): array
@@ -28,12 +25,6 @@ class DatabaseModelSettingsRepository implements ModelSettingsRepository
     }
 
     /**
-     * @param string $type
-     * @param int $id
-     * @param string $key
-     * @param mixed $value
-     * @param string|null $valueType
-     * @return void
      * @throws \JsonException
      */
     public function set(string $type, int $id, string $key, mixed $value, ?string $valueType = null): void
@@ -53,12 +44,6 @@ class DatabaseModelSettingsRepository implements ModelSettingsRepository
         );
     }
 
-    /**
-     * @param string $type
-     * @param int $id
-     * @param string $key
-     * @return void
-     */
     public function forget(string $type, int $id, string $key): void
     {
         ModelSetting::query()
