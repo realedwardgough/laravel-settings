@@ -49,7 +49,7 @@
             }
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require-dev": {
         "laravel/pint": "dev-main",
         "phpunit/phpunit": "^11.5"
