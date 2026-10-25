@@ -52,6 +52,7 @@ class SettingsServiceProvider extends ServiceProvider
             return new ModelSettingsManager(
                 $app->make(ModelSettingsRepository::class),
                 $app['cache.store'],
+                $app['events'],
             );
         });
     }

@@ -4,11 +4,23 @@ declare(strict_types=1);
 
 namespace Egough\LaravelSettings\ModelSettings;
 
+use Egough\LaravelSettings\Contracts\DefersSettingEvents;
 use Egough\LaravelSettings\ModelSettings\Models\ModelSetting;
 use Egough\LaravelSettings\Support\Caster;
 
-class DatabaseModelSettingsRepository implements ModelSettingsRepository
+class DatabaseModelSettingsRepository implements DefersSettingEvents, ModelSettingsRepository
 {
+    public function afterCommit(callable $callback): void
+    {
+        $connection = (new ModelSetting)->getConnection();
+
+        if ($connection->transactionLevel() > 0) {
+            $connection->afterCommit($callback);
+        } else {
+            $callback();
+        }
+    }
+
     /**
      * @throws \JsonException
      */
