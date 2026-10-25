@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Egough\LaravelSettings\Tests;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\DatabaseTransactionsManager;
 use Illuminate\Database\Schema\Blueprint;
 
 abstract class DatabaseTestCase extends TestCase
@@ -23,6 +24,7 @@ abstract class DatabaseTestCase extends TestCase
         ]);
         $this->database->setAsGlobal();
         $this->database->bootEloquent();
+        $this->database->getConnection()->setTransactionManager(new DatabaseTransactionsManager);
 
         $this->runPackageMigrations();
     }

@@ -31,6 +31,7 @@ class SettingsServiceProvider extends ServiceProvider
             return new SettingsManager(
                 repo: $app->make(SettingsRepository::class),
                 cache: $app['cache.store'],
+                events: $app['events'],
             );
         });
 
