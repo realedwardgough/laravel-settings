@@ -15,6 +15,11 @@
     - [Retrieving a Value](#retrieving-a-model-value)
     - [Retrieving All Settings](#retrieving-all-model-settings)
     - [Removing a Setting](#removing-a-model-setting)
+- [Setting Events](#setting-events)
+    - [Event Payloads](#event-payloads)
+    - [Change Detection](#change-detection)
+    - [Transactions and Listeners](#transactions-and-listeners)
+    - [Custom Repositories](#custom-repositories)
 - [Feature Flags](#feature-flags)
     - [Checking a Flag](#checking-a-flag)
     - [Using the Facade](#using-the-flag-facade)
@@ -298,6 +303,99 @@ Remove a specific setting from the model:
 ```php
 $user->settings()->forget('ui.theme');
 ```
+
+---
+
+<a name="setting-events"></a>
+## Setting Events
+
+The package dispatches Laravel events when settings are created, updated, or deleted through a manager. Helpers, facades, model settings, and the `settings:set` Artisan command use these managers and emit the same events.
+
+Register a listener in your application's service provider:
+
+```php
+use Egough\LaravelSettings\Events\SettingCreated;
+use Egough\LaravelSettings\Events\SettingDeleted;
+use Egough\LaravelSettings\Events\SettingUpdated;
+use Illuminate\Support\Facades\Event;
+
+Event::listen(SettingUpdated::class, function (SettingUpdated $event): void {
+    if ($event->key === 'notifications.enabled') {
+        // $event->oldValue and $event->newValue contain decoded values.
+        // $event->model is the owner for model settings, or null globally.
+    }
+});
+
+Event::listen(SettingCreated::class, function (SettingCreated $event): void {
+    // React to the first stored value for this key and scope.
+});
+
+Event::listen(SettingDeleted::class, function (SettingDeleted $event): void {
+    // $event->oldValue contains the value removed from storage.
+});
+```
+
+### Event Payloads
+
+All event classes live in `Egough\LaravelSettings\Events` and expose public constructor properties:
+
+| Event | Properties |
+|---|---|
+| `SettingCreated` | `string $key`, `mixed $newValue`, `?Model $model = null` |
+| `SettingUpdated` | `string $key`, `mixed $oldValue`, `mixed $newValue`, `?Model $model = null` |
+| `SettingDeleted` | `string $key`, `mixed $oldValue`, `?Model $model = null` |
+
+`Model` refers to `Illuminate\Database\Eloquent\Model`. For model settings, the event contains the owning model passed to `for($model)` or using `HasSettings`, rather than the internal settings row. Global events use `null`.
+
+### Change Detection
+
+Events describe changes to stored overrides within the requested scope:
+
+- A missing stored key emits `SettingCreated` when written, even if its value matches a config default.
+- Existing keys emit `SettingUpdated` only when their decoded values differ using strict comparison (`!==`). For example, changing a decoded string `'1'` to integer `1` emits an update.
+- Equal decoded values emit nothing, even if the storage type changes. JSON objects are decoded to arrays before comparison.
+- Removing an existing key emits `SettingDeleted`. Removing a missing key emits nothing.
+- Stored `null` counts as an existing key. Config defaults and caller fallbacks do not count as stored values.
+
+Managers read uncached repository snapshots before and after writes. This preserves compatibility with custom repositories and adds two uncached reads per write. Snapshot comparisons are per-call change detection, not an atomic audit trail under concurrent writes.
+
+### Transactions and Listeners
+
+With the built-in database repositories, events are delivered after the settings storage transaction commits. They are discarded if that transaction rolls back. Without an active storage transaction, listeners run synchronously before `set()` or `forget()` returns.
+
+For model settings, transaction timing follows the connection used by the settings table, which may differ from the owning model's connection.
+
+Payload values are captured at write time. Multiple changes in a transaction produce separate events; they are not combined into one final change. A listener reading settings after commit sees the current stored value, which may differ from an earlier event's captured value.
+
+The relevant cache is invalidated after successful writes and again immediately before event delivery, so listeners can read fresh settings even if the cache was repopulated during the transaction.
+
+Failed writes do not emit events. Listener exceptions propagate to the caller; they do not undo a write that has already committed. Direct repository, Eloquent, and SQL writes do not emit these package events.
+
+The implementation uses connection `afterCommit()` callbacks, available from Laravel 10.0, and does not require the `ShouldDispatchAfterCommit` interface introduced later in Laravel 10.
+
+### Custom Repositories
+
+Existing `SettingsRepository` and `ModelSettingsRepository` interfaces are unchanged. Custom repositories receive immediate event delivery by default, including when an unrelated Laravel database transaction is active.
+
+To defer delivery until your storage commits, additionally implement `Egough\LaravelSettings\Contracts\DefersSettingEvents`:
+
+```php
+public function afterCommit(callable $callback): void
+{
+    // Use the connection that stores your settings.
+    $connection = $this->connection;
+
+    if ($connection->transactionLevel() > 0) {
+        $connection->afterCommit($callback);
+    } else {
+        $callback();
+    }
+}
+```
+
+The implementation must execute the callback immediately without an active transaction, defer it until successful commit otherwise, and discard it on rollback. Repositories using other storage must supply equivalent coordination for their own transactions.
+
+Both managers accept an optional third constructor argument, `events`, implementing `Illuminate\Contracts\Events\Dispatcher`. Existing two-argument construction resolves Laravel's `events` service when delivering an event. The package service provider injects that service automatically.
 
 ---
 

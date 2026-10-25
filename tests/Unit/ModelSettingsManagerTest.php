@@ -4,15 +4,43 @@ declare(strict_types=1);
 
 namespace Egough\LaravelSettings\Tests\Unit;
 
+use Egough\LaravelSettings\Events\SettingCreated;
+use Egough\LaravelSettings\Events\SettingDeleted;
+use Egough\LaravelSettings\Events\SettingUpdated;
 use Egough\LaravelSettings\ModelSettings\ModelSettingsManager;
 use Egough\LaravelSettings\Tests\Support\FakeModel;
 use Egough\LaravelSettings\Tests\Support\InMemoryModelSettingsRepository;
 use Egough\LaravelSettings\Tests\TestCase;
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Cache\Repository as CacheRepository;
+use Illuminate\Events\Dispatcher;
 
 class ModelSettingsManagerTest extends TestCase
 {
+    public function test_custom_model_repositories_work_with_an_injected_dispatcher(): void
+    {
+        $events = new Dispatcher;
+        $received = [];
+        foreach ([SettingCreated::class, SettingUpdated::class, SettingDeleted::class] as $event) {
+            $events->listen($event, function (object $event) use (&$received): void {
+                $received[] = $event;
+            });
+        }
+        $model = new FakeModel;
+        $model->id = 5;
+        $manager = (new ModelSettingsManager(new InMemoryModelSettingsRepository, new CacheRepository(new ArrayStore), $events))->for($model);
+
+        $manager->set('theme', 'dark');
+        $manager->set('theme', 'light');
+        $manager->forget('theme');
+
+        $this->assertEquals([
+            new SettingCreated('theme', 'dark', $model),
+            new SettingUpdated('theme', 'dark', 'light', $model),
+            new SettingDeleted('theme', 'light', $model),
+        ], $received);
+    }
+
     public function test_it_requires_a_model_scope_before_access(): void
     {
         $manager = new ModelSettingsManager(

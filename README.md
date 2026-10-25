@@ -179,6 +179,36 @@ $user->settings()->forget('ui.theme');
 
 ---
 
+## Setting Events
+
+Listen for stored setting changes using Laravel events:
+
+```php
+use Egough\LaravelSettings\Events\SettingUpdated;
+use Illuminate\Support\Facades\Event;
+
+Event::listen(SettingUpdated::class, function (SettingUpdated $event): void {
+    if ($event->key === 'notifications.enabled') {
+        // React using $event->oldValue and $event->newValue.
+        // $event->model is the owning model, or null for global settings.
+    }
+});
+```
+
+| Event | Public properties |
+|---|---|
+| `SettingCreated` | `key`, `newValue`, `model` |
+| `SettingUpdated` | `key`, `oldValue`, `newValue`, `model` |
+| `SettingDeleted` | `key`, `oldValue`, `model` |
+
+Values are decoded from storage. Equal values and deleting a missing key emit nothing. Creating a stored override emits `SettingCreated` even when it matches a config default; stored `null` counts as an existing setting.
+
+With the built-in repositories, events run after the settings database transaction commits and are discarded on rollback. Outside a transaction, they run immediately after cache invalidation. This applies to helpers, facades, managers, model settings, and `settings:set`. Direct repository, Eloquent, and SQL writes do not emit these events.
+
+See [the event documentation](docs.md#setting-events) for transaction details and custom repository support.
+
+---
+
 ## Feature Flags
 
 Feature flags are boolean settings.

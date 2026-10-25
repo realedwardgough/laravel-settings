@@ -5,13 +5,21 @@ declare(strict_types=1);
 namespace Egough\LaravelSettings;
 
 use Egough\LaravelSettings\Contracts\SettingsRepository;
+use Egough\LaravelSettings\Events\SettingCreated;
+use Egough\LaravelSettings\Events\SettingDeleted;
+use Egough\LaravelSettings\Events\SettingUpdated;
+use Egough\LaravelSettings\Support\DispatchesSettingEvents;
 use Illuminate\Contracts\Cache\Repository as Cache;
+use Illuminate\Contracts\Events\Dispatcher;
 
 readonly class SettingsManager
 {
+    use DispatchesSettingEvents;
+
     public function __construct(
         private SettingsRepository $repo,
         private Cache $cache,
+        private ?Dispatcher $events = null,
     ) {}
 
     public function get(string $key, mixed $default = null): mixed
@@ -32,14 +40,32 @@ readonly class SettingsManager
 
     public function set(string $key, mixed $value, ?string $type = null): void
     {
+        $before = $this->repo->all();
         $this->repo->set(key: $key, value: $value, type: $type);
         $this->clearCache();
+        $after = $this->repo->all();
+
+        if (! array_key_exists($key, $after)) {
+            return;
+        }
+
+        if (! array_key_exists($key, $before)) {
+            $this->dispatchSettingEvent(new SettingCreated($key, $after[$key]['value']));
+        } elseif ($before[$key]['value'] !== $after[$key]['value']) {
+            $this->dispatchSettingEvent(new SettingUpdated($key, $before[$key]['value'], $after[$key]['value']));
+        }
     }
 
     public function forget(string $key): void
     {
+        $before = $this->repo->all();
         $this->repo->forget(key: $key);
         $this->clearCache();
+        $after = $this->repo->all();
+
+        if (array_key_exists($key, $before) && ! array_key_exists($key, $after)) {
+            $this->dispatchSettingEvent(new SettingDeleted($key, $before[$key]['value']));
+        }
     }
 
     /** @return array<string, mixed> */

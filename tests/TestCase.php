@@ -6,6 +6,7 @@ namespace Egough\LaravelSettings\Tests;
 
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Container\Container;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Facade;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
@@ -16,6 +17,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $app = new Container;
+        $app->instance('events', new Dispatcher($app));
 
         $app->instance('config', new ConfigRepository([
             'settings' => [

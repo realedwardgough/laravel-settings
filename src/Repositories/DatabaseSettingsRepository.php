@@ -4,12 +4,24 @@ declare(strict_types=1);
 
 namespace Egough\LaravelSettings\Repositories;
 
+use Egough\LaravelSettings\Contracts\DefersSettingEvents;
 use Egough\LaravelSettings\Contracts\SettingsRepository;
 use Egough\LaravelSettings\Models\Setting;
 use Egough\LaravelSettings\Support\Caster;
 
-class DatabaseSettingsRepository implements SettingsRepository
+class DatabaseSettingsRepository implements DefersSettingEvents, SettingsRepository
 {
+    public function afterCommit(callable $callback): void
+    {
+        $connection = (new Setting)->getConnection();
+
+        if ($connection->transactionLevel() > 0) {
+            $connection->afterCommit($callback);
+        } else {
+            $callback();
+        }
+    }
+
     /**
      * @return array|array[]
      */
