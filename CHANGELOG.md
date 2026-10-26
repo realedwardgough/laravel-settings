@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.1 - tbc
+
+### Added
+
+- Laravel Boost guidelines for application and model settings, feature flags, caching, and events.
+- Instructions for discovering and refreshing package guidelines with Laravel Boost.
+
 ## v1.4.0 - 2026-10-25
 
 ### Added
