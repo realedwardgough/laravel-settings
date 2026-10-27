@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.4.1 - 2026-10-27
+
+### Added
+
+- Laravel Boost guidelines for application and model settings, feature flags, caching, and events.
+- On-demand `laravel-settings-development` Boost skill with implementation workflows and testing guidance.
+- Instructions for discovering and refreshing package guidelines with Laravel Boost.
+
 ## v1.4.0 - 2026-10-25
 
 ### Added

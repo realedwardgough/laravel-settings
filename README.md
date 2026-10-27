@@ -105,6 +105,28 @@ php artisan migrate
 
 ---
 
+## Laravel Boost
+
+This package includes guidelines and an on-demand `laravel-settings-development` skill for [Laravel Boost](https://laravel.com/docs/boost). The guidelines provide essential package context; the skill adds workflows for implementing and testing application settings, model preferences, feature flags, and event listeners.
+
+In a Laravel application with Boost installed, run:
+
+```bash
+php artisan boost:install
+```
+
+Select guidelines and skills as Boost features, `egough/laravel-settings` when prompted for third-party guidelines/skills, and your preferred coding agent. Boost includes the guidelines in that agent's instructions and installs the skill for agents that support skills. You can also run the installer again to add the skill to an existing Boost setup.
+
+After updating this package, refresh your Boost resources with:
+
+```bash
+php artisan boost:update
+```
+
+Boost is optional and is installed as a development dependency in your application. This package does not require it to run.
+
+---
+
 ## Application Settings
 
 Global settings are accessible anywhere in your application.
