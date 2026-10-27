@@ -107,7 +107,7 @@ php artisan migrate
 
 ## Laravel Boost
 
-This package includes guidelines for [Laravel Boost](https://laravel.com/docs/boost) to help AI coding assistants use application settings, model settings, feature flags, caching, and events correctly.
+This package includes guidelines and an on-demand `laravel-settings-development` skill for [Laravel Boost](https://laravel.com/docs/boost). The guidelines provide essential package context; the skill adds workflows for implementing and testing application settings, model preferences, feature flags, and event listeners.
 
 In a Laravel application with Boost installed, run:
 
@@ -115,7 +115,9 @@ In a Laravel application with Boost installed, run:
 php artisan boost:install
 ```
 
-Select `egough/laravel-settings` when Boost prompts for third-party guidelines, along with your preferred coding agent. Boost includes the package guidelines in that agent's instructions. After updating this package, refresh your Boost instructions with:
+Select guidelines and skills as Boost features, `egough/laravel-settings` when prompted for third-party guidelines/skills, and your preferred coding agent. Boost includes the guidelines in that agent's instructions and installs the skill for agents that support skills. You can also run the installer again to add the skill to an existing Boost setup.
+
+After updating this package, refresh your Boost resources with:
 
 ```bash
 php artisan boost:update
